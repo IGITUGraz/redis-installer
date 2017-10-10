@@ -1,7 +1,9 @@
 Redis Installer
 ===============
 
-This is a shim package that, when installed, downloads and installs the latest stable redis to the same path as the python which is used to run it. It is recommended to only use this from a virtual environment. It also provides one api function that can be used to run redis.
+This is a shim package that, that allows you to install redis using pip!
+It is recommended to only use this from a virtual environment.
+It also provides one api function that can be used to start/stop redis.
 
 Run with::
 
