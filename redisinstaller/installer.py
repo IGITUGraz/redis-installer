@@ -6,6 +6,7 @@ from pyunpack import Archive
 
 def install_redis():
     install_prefix = os.environ['VIRTUAL_ENV']
+    assert install_prefix is not None, "Running from outside a virtual environment not supported"
 
     if not os.path.exists(os.path.join(install_prefix, 'bin', 'redis-server')):
         # As long as the file is opened in binary mode, both Python 2 and Python 3

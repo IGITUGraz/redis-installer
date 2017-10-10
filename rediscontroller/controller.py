@@ -3,14 +3,19 @@ import subprocess
 import os
 
 
-def start_redis(data_directory):
+def start_redis(data_directory, config_file_path=None):
     os.makedirs(data_directory, exist_ok=True)
     os.chdir(data_directory)
     install_prefix = os.environ['VIRTUAL_ENV']
-    redis_server_path = os.path.join(install_prefix, 'bin', 'redis-server')
-    redis_conf_path = os.path.join(install_prefix, 'config', 'redis.conf')
+    assert install_prefix is not None, "Running from outside a virtual environment not supported"
 
-    result = subprocess.run([redis_server_path, redis_conf_path])
+    redis_server_path = os.path.join(install_prefix, 'bin', 'redis-server')
+    if config_file_path is None:
+        config_file_path = os.path.join(install_prefix, 'config', 'redis.conf')
+
+    assert os.path.exists(config_file_path), "File {} does not exist".format(config_file_path)
+
+    result = subprocess.run([redis_server_path, config_file_path])
     assert result.returncode == 0
 
 
