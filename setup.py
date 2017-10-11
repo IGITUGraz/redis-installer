@@ -1,13 +1,17 @@
 from setuptools import setup
 
-from redisinstaller.installer import install_redis
+from redisinstaller.installer import install_redis, install_redis_json, generate_config
 
-FULL_VERSION = "0.1.0"
+FULL_VERSION = "0.2.0"
 
 """
 This file installs the redis.
 
 """
+
+## NOTE: The order of these calls is fairly important. Do not move.
+
+generate_config()
 
 setup(
     name="redis-installer",
@@ -16,11 +20,12 @@ setup(
     author="Anand S",
     author_email="anandtrex@users.noreply.github.com",
     description="This module installs redis to the current virtual environment bin",
-    install_requires=['pycurl', 'patool', 'pyunpack', 'redis'],
+    install_requires=['pycurl', 'patool', 'pyunpack', 'gitpython', 'redis', 'rejson'],
     provides=['rediscontroller'],
     data_files=[
-        ('config', ['redis.conf']),
+        ('config', ['config/redis.conf']),
     ]
 )
 
 install_redis()
+install_redis_json()

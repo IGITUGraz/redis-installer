@@ -1,14 +1,14 @@
 Redis Installer
 ===============
 
-This is a shim package that, that allows you to install redis using pip!
+This is a shim package that, that allows you to install redis and the redis rejson module using pip!
 It also provides one api function that can be used to start/stop redis.
 
 Run with::
 
     pip install --upgrade .
 
-This will download, compile and install the latest stable version of redis to the virtual environment.
+This will download, compile and install the latest stable version of redis to the virtual environment, and install all dependencies.
 
 Then use the ``rediscontroller`` package like so:
 
@@ -34,3 +34,4 @@ Warnings
 * Works only from within a virtual environment.
 * Redis is configured to listen on ALL ports. DO NOT run from a host exposed to the internet.
 * Redis is configured to be in AOF mode (which might be slow).
+* rejson module is installed by default.
