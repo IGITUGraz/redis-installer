@@ -1,13 +1,13 @@
-import os
 import subprocess
-import pycurl
+
+import os
 import shutil
-from jinja2 import Environment, FileSystemLoader
-from pyunpack import Archive
-from git import Repo
 
 
 def install_redis():
+    from pyunpack import Archive
+    import pycurl
+
     install_prefix = os.environ['VIRTUAL_ENV']
     assert install_prefix is not None, "Running from outside a virtual environment not supported"
 
@@ -38,6 +38,8 @@ def install_redis():
 
 
 def install_redis_json():
+    from git import Repo
+
     install_prefix = os.environ['VIRTUAL_ENV']
     assert install_prefix is not None, "Running from outside a virtual environment not supported"
 
@@ -59,8 +61,11 @@ def install_redis_json():
 
 
 def generate_config():
+    from jinja2 import Environment, FileSystemLoader
+
     install_prefix = os.environ['VIRTUAL_ENV']
     assert install_prefix is not None, "Running from outside a virtual environment not supported"
+
     env = Environment(loader=FileSystemLoader('config'))
 
     template = env.get_template("redis.conf.jinja")
@@ -70,3 +75,10 @@ def generate_config():
 
     with open('config/redis.conf', 'w') as f:
         f.write(rendered_data)
+
+
+def copy_config():
+    install_prefix = os.environ['VIRTUAL_ENV']
+    assert install_prefix is not None, "Running from outside a virtual environment not supported"
+
+    shutil.copyfile(os.path.join('config', 'redis.conf'), os.path.join(install_prefix, 'config', 'redis.conf'))
