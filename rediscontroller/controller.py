@@ -5,6 +5,7 @@ import os
 
 def start_redis(data_directory, config_file_path=None):
     os.makedirs(data_directory, exist_ok=True)
+    current_dir = os.getcwd()
     os.chdir(data_directory)
     install_prefix = os.environ['VIRTUAL_ENV']
     assert install_prefix is not None, "Running from outside a virtual environment not supported"
@@ -17,6 +18,7 @@ def start_redis(data_directory, config_file_path=None):
 
     result = subprocess.run([redis_server_path, config_file_path])
     assert result.returncode == 0
+    os.chdir(current_dir)
 
 
 def stop_redis(redis_host='localhost', redis_port=6379):

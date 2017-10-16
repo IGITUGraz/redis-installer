@@ -32,6 +32,6 @@ Warnings
 ++++++++
 
 * Works only from within a virtual environment.
-* Redis is configured to listen on ALL ports. DO NOT run from a host exposed to the internet.
+* Redis protected mode is turned OFF. DO NOT run from a host exposed to the internet.
 * Redis is configured to be in AOF mode (which might be slow).
 * rejson module is installed by default.

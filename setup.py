@@ -1,6 +1,5 @@
 from setuptools import setup
 
-from redisinstaller.installer import install_redis, install_redis_json, generate_config, copy_config
 
 FULL_VERSION = "0.2.0"
 
@@ -25,6 +24,8 @@ setup(
     #     ('config', ['config/redis.conf']),
     # ]
 )
+
+from redisinstaller.installer import install_redis, install_redis_json, generate_config, copy_config
 
 install_redis()
 install_redis_json()

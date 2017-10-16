@@ -6,7 +6,6 @@ import shutil
 
 def install_redis():
     from pyunpack import Archive
-    import pycurl
 
     install_prefix = os.environ['VIRTUAL_ENV']
     assert install_prefix is not None, "Running from outside a virtual environment not supported"
@@ -17,12 +16,17 @@ def install_redis():
         redis_unpacked_root = '/tmp'
         redis_archive_path = os.path.join(redis_unpacked_root, 'redis-stable.tar.gz')
         redis_unpacked_path = os.path.join(redis_unpacked_root, 'redis-stable')
-        with open(redis_archive_path, 'wb') as f:
-            c = pycurl.Curl()
-            c.setopt(c.URL, 'http://download.redis.io/redis-stable.tar.gz')
-            c.setopt(c.WRITEDATA, f)
-            c.perform()
-            c.close()
+
+        if not os.path.exists(redis_archive_path):
+            import pycurl
+
+            ## Download the archive
+            with open(redis_archive_path, 'wb') as f:
+                c = pycurl.Curl()
+                c.setopt(c.URL, 'http://download.redis.io/redis-stable.tar.gz')
+                c.setopt(c.WRITEDATA, f)
+                c.perform()
+                c.close()
 
         Archive(redis_archive_path).extractall(redis_unpacked_root)
 
@@ -48,7 +52,9 @@ def install_redis_json():
     if not os.path.exists(rejson_file_dest):
         build_root = '/tmp'
         build_dir = os.path.join(build_root, 'rejson')
-        Repo.clone_from('https://github.com/RedisLabsModules/rejson.git', build_dir)
+
+        if not os.path.exists(build_dir):
+            Repo.clone_from('https://github.com/RedisLabsModules/rejson.git', build_dir)
 
         os.chdir(build_dir)
 
@@ -66,7 +72,7 @@ def generate_config():
     install_prefix = os.environ['VIRTUAL_ENV']
     assert install_prefix is not None, "Running from outside a virtual environment not supported"
 
-    env = Environment(loader=FileSystemLoader('config'))
+    env = Environment(loader=FileSystemLoader('./config'))
 
     template = env.get_template("redis.conf.jinja")
     so_name = 'rejson.so'
@@ -81,4 +87,5 @@ def copy_config():
     install_prefix = os.environ['VIRTUAL_ENV']
     assert install_prefix is not None, "Running from outside a virtual environment not supported"
 
+    os.makedirs(os.path.join(install_prefix, 'config'), exist_ok=True)
     shutil.copyfile(os.path.join('config', 'redis.conf'), os.path.join(install_prefix, 'config', 'redis.conf'))
