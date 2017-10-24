@@ -2,6 +2,9 @@ import subprocess
 
 import os
 
+# REDIS_PORT = 6379
+REDIS_PORT = 65535
+
 
 def start_redis(data_directory, config_file_path=None):
     os.makedirs(data_directory, exist_ok=True)
@@ -20,8 +23,22 @@ def start_redis(data_directory, config_file_path=None):
     assert result.returncode == 0
     os.chdir(current_dir)
 
+    while True:
+        if is_redis_running():
+            break
 
-def stop_redis(redis_host='localhost', redis_port=6379):
+
+def stop_redis(redis_host='localhost', redis_port=REDIS_PORT):
     import redis
-    r = redis.StrictRedis(host=redis_host, port=redis_port, db=0)
+    r = redis.StrictRedis(host=redis_host, port=redis_port)
     r.shutdown()
+
+
+def is_redis_running(redis_host='localhost', redis_port=REDIS_PORT):
+    import redis
+    r = redis.StrictRedis(host=redis_host, port=redis_port)
+    try:
+        r.ping()
+        return True
+    except redis.exceptions.ConnectionError:
+        return False

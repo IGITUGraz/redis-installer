@@ -3,6 +3,9 @@ import subprocess
 import os
 import shutil
 
+# REDIS_PORT = 6379
+REDIS_PORT = 65535
+
 
 def install_redis():
     from pyunpack import Archive
@@ -77,7 +80,7 @@ def generate_config():
     template = env.get_template("redis.conf.jinja")
     so_name = 'rejson.so'
     rejson_module_path = os.path.join(install_prefix, 'lib', so_name)
-    rendered_data = template.render(rejson_module_path=rejson_module_path)
+    rendered_data = template.render(rejson_module_path=rejson_module_path, port=REDIS_PORT)
 
     with open('config/redis.conf', 'w') as f:
         f.write(rendered_data)
