@@ -33,6 +33,7 @@ def install_redis():
 
         Archive(redis_archive_path).extractall(redis_unpacked_root)
 
+        current_path = os.path.realpath(os.getcwd())
         os.chdir(redis_unpacked_path)
 
         result = subprocess.run(['make', '-j5'])
@@ -40,6 +41,7 @@ def install_redis():
 
         result = subprocess.run(['make', 'PREFIX={}'.format(install_prefix), 'install'])
         assert result.returncode == 0
+        os.chdir(current_path)
     else:
         print("redis-server already installed")
 
@@ -59,17 +61,21 @@ def install_redis_json():
         if not os.path.exists(build_dir):
             Repo.clone_from('https://github.com/RedisLabsModules/rejson.git', build_dir)
 
+        current_path = os.path.realpath(os.getcwd())
+
         os.chdir(build_dir)
 
         result = subprocess.run(['make', '-j5'])
         assert result.returncode == 0
 
         shutil.copyfile(os.path.join(build_dir, 'src', so_name), rejson_file_dest)
+        os.chdir(current_path)
     else:
         print("rejson is already installed")
 
 
 def generate_config():
+    print("Generating config file")
     from jinja2 import Environment, FileSystemLoader
 
     install_prefix = os.environ['VIRTUAL_ENV']
@@ -82,8 +88,9 @@ def generate_config():
     rejson_module_path = os.path.join(install_prefix, 'lib', so_name)
     rendered_data = template.render(rejson_module_path=rejson_module_path, port=REDIS_PORT)
 
-    with open('config/redis.conf', 'w') as f:
+    with open('./config/redis.conf', 'w') as f:
         f.write(rendered_data)
+    print("Done")
 
 
 def copy_config():
