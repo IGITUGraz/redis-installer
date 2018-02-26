@@ -3,7 +3,7 @@ import re
 from setuptools import setup
 from setuptools.command.install import install
 
-FULL_VERSION = "1.0.1"
+FULL_VERSION = "1.0.2"
 
 """
 This file installs the redis.

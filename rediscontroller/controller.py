@@ -2,7 +2,7 @@ import subprocess
 
 import os
 
-from rediscontroller import which, get_install_prefix
+from rediscontroller.utils import which, get_install_prefix
 
 REDIS_PORT = 65535
 
