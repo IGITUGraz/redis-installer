@@ -6,10 +6,14 @@ It also provides one api function that can be used to start/stop redis.
 
 Install with::
 
-    pip install -r requirements.txt && pip install --upgrade .
+    pip3 install [--user] https://github.com/anandtrex/redis-installer/archive/v1.0.0.zip
 
-This will download, compile and install the latest stable version of redis and all dependencies to your virtual
-environment if you are using one.  Otherwise, it will install it to your user python path (~/.local). 
+To install from source, use::
+
+    pip install -r requirements.txt && pip install --upgrade [--user] .
+
+This will download, compile and install the latest stable version of redis and some python packages for redis to your
+virtual environment if you are using one.  Otherwise, it will install it to your user python path (~/.local).
 
 After installation, you can use the ``rediscontroller`` package like so:
 
@@ -40,3 +44,10 @@ In the default configuration:
 * rejson module is installed by default.
 
 If you want to change any of this, specify your own config file when starting redis.
+
+Why??
+=====
+
+This package is useful if you (or your users) don't have root access to your system, and still want to use redis,
+especially from within a python package. This package is a testament to how really really easy it is to compile and
+install redis, since it has almost zero dependencies except a semi-recent gcc and some standard libraries.
