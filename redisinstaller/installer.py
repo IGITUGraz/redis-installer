@@ -3,15 +3,21 @@ import subprocess
 import os
 import shutil
 
-# REDIS_PORT = 6379
 REDIS_PORT = 65535
+
+
+def get_install_prefix():
+    install_prefix = os.environ.get('VIRTUAL_ENV')
+    if install_prefix is None:
+        print("Installing to user home ~/.local")
+        install_prefix = os.path.expanduser('~/.local')
+    return install_prefix
 
 
 def install_redis():
     from pyunpack import Archive
 
-    install_prefix = os.environ['VIRTUAL_ENV']
-    assert install_prefix is not None, "Running from outside a virtual environment not supported"
+    install_prefix = get_install_prefix()
 
     if not os.path.exists(os.path.join(install_prefix, 'bin', 'redis-server')):
         # As long as the file is opened in binary mode, both Python 2 and Python 3
@@ -49,8 +55,7 @@ def install_redis():
 def install_redis_json():
     from git import Repo
 
-    install_prefix = os.environ['VIRTUAL_ENV']
-    assert install_prefix is not None, "Running from outside a virtual environment not supported"
+    install_prefix = get_install_prefix()
 
     so_name = 'rejson.so'
     rejson_file_dest = os.path.join(install_prefix, 'lib', so_name)
@@ -78,8 +83,7 @@ def generate_config():
     print("Generating config file")
     from jinja2 import Environment, FileSystemLoader
 
-    install_prefix = os.environ['VIRTUAL_ENV']
-    assert install_prefix is not None, "Running from outside a virtual environment not supported"
+    install_prefix = get_install_prefix()
 
     env = Environment(loader=FileSystemLoader('./config'))
 
@@ -94,8 +98,7 @@ def generate_config():
 
 
 def copy_config():
-    install_prefix = os.environ['VIRTUAL_ENV']
-    assert install_prefix is not None, "Running from outside a virtual environment not supported"
+    install_prefix = get_install_prefix()
 
     os.makedirs(os.path.join(install_prefix, 'config'), exist_ok=True)
     shutil.copyfile(os.path.join('config', 'redis.conf'), os.path.join(install_prefix, 'config', 'redis.conf'))

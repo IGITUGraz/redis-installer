@@ -8,30 +8,35 @@ Install with::
 
     pip install -r requirements.txt && pip install --upgrade .
 
-This will download, compile and install the latest stable version of redis to the virtual environment, and install all dependencies.
+This will download, compile and install the latest stable version of redis and all dependencies to your virtual
+environment if you are using one.  Otherwise, it will install it to your user python path (~/.local). 
 
-Then use the ``rediscontroller`` package like so:
+After installation, you can use the ``rediscontroller`` package like so:
 
 .. code:: python
 
     from rediscontroller import start_redis, stop_redis
-    # Provide path to the data director here while staring redis. This uses the default config (see warnings below)
+    # Provide path to the data director here while staring redis. This uses the default config (see notes below)
+    #^ and starts redis on PORT 65535
     start_redis(data_directory='/path/to/data/directory')
 
-    # Use this to provide your own redis configuration file
+    # Use this to provide your own redis configuration file and use the PORT you specified there for subsequent access.
     start_redis(data_directory='/path/to/data/directory', config_file_path='path/to/redis.conf')
 
-    # Stop redis. This will work only if run from the same host from which it was started.
+    # Stop redis. Without arguments, it will work only if you run from the same host from which it was started.
     stop_redis()
 
     # Otherwise, pass in the redis host and port like so
     stop_redis(redis_host='localhost', redis_port=6379)
 
 
-Warnings
-++++++++
+Notes
++++++
 
-* Works only from within a virtual environment.
+In the default configuration:
+
 * Redis protected mode is turned OFF. DO NOT run from a host exposed to the internet.
 * Redis is configured to be in AOF mode (which might be slow).
 * rejson module is installed by default.
+
+If you want to change any of this, specify your own config file when starting redis.
