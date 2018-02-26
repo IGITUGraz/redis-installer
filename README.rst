@@ -6,7 +6,7 @@ It also provides one api function that can be used to start/stop redis.
 
 Install with::
 
-    pip3 install [--user] https://github.com/anandtrex/redis-installer/archive/v1.0.0.zip
+    pip3 install [--user] https://github.com/anandtrex/redis-installer/archive/v1.0.1.zip
 
 To install from source, use::
 

@@ -23,8 +23,8 @@ def install_redis():
         # As long as the file is opened in binary mode, both Python 2 and Python 3
         # can write response body to it without decoding.
         redis_unpacked_root = '/tmp'
-        redis_archive_path = os.path.join(redis_unpacked_root, 'redis-stable.tar.gz')
-        redis_unpacked_path = os.path.join(redis_unpacked_root, 'redis-stable')
+        redis_archive_path = os.path.join(redis_unpacked_root, 'redis-4.0.8.tar.gz')
+        redis_unpacked_path = os.path.join(redis_unpacked_root, 'redis-4.0.8')
 
         if not os.path.exists(redis_archive_path):
             import pycurl
@@ -32,7 +32,7 @@ def install_redis():
             ## Download the archive
             with open(redis_archive_path, 'wb') as f:
                 c = pycurl.Curl()
-                c.setopt(c.URL, 'http://download.redis.io/redis-stable.tar.gz')
+                c.setopt(c.URL, 'http://download.redis.io/releases/redis-4.0.8.tar.gz')
                 c.setopt(c.WRITEDATA, f)
                 c.perform()
                 c.close()
@@ -53,27 +53,38 @@ def install_redis():
 
 
 def install_redis_json():
-    from git import Repo
+    from pyunpack import Archive
 
     install_prefix = get_install_prefix()
 
     so_name = 'rejson.so'
     rejson_file_dest = os.path.join(install_prefix, 'lib', so_name)
     if not os.path.exists(rejson_file_dest):
-        build_root = '/tmp'
-        build_dir = os.path.join(build_root, 'rejson')
+        rejson_unpacked_root = '/tmp'
+        rejson_archive_path = os.path.join(rejson_unpacked_root, 'rejson-v1.0.1.tar.gz')
+        rejson_unpacked_path = os.path.join(rejson_unpacked_root, 'rejson-1.0.1')
 
-        if not os.path.exists(build_dir):
-            Repo.clone_from('https://github.com/RedisLabsModules/rejson.git', build_dir)
+        if not os.path.exists(rejson_archive_path):
+            import pycurl
+
+            ## Download the archive
+            with open(rejson_archive_path, 'wb') as f:
+                c = pycurl.Curl()
+                c.setopt(pycurl.FOLLOWLOCATION, 1)  # Follow redirects
+                c.setopt(c.URL, 'https://github.com/RedisLabsModules/rejson/archive/v1.0.1.tar.gz')
+                c.setopt(c.WRITEDATA, f)
+                c.perform()
+                c.close()
+
+        Archive(rejson_archive_path).extractall(rejson_unpacked_root)
 
         current_path = os.path.realpath(os.getcwd())
-
-        os.chdir(build_dir)
+        os.chdir(rejson_unpacked_path)
 
         result = subprocess.run(['make', '-j5'])
         assert result.returncode == 0
 
-        shutil.copyfile(os.path.join(build_dir, 'src', so_name), rejson_file_dest)
+        shutil.copyfile(os.path.join(rejson_unpacked_path, 'src', so_name), rejson_file_dest)
         os.chdir(current_path)
     else:
         print("rejson is already installed")
