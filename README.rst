@@ -1,8 +1,8 @@
 Redis Installer
 ===============
 
-This is a shim package that, that allows you to install [redis](https://redis.io) and the redis
-[rejson](http://rejson.io) module using pip!  It also provides API functions to start/stop redis and to check if its
+This is a shim package that, that allows you to install `redis <https://redis.io>`_ and the redis
+`rejson <http://rejson.io>`_ module using pip!  It also provides API functions to start/stop redis and to check if its
 running.
 
 Install with::
