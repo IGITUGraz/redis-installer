@@ -1,8 +1,9 @@
 Redis Installer
 ===============
 
-This is a shim package that, that allows you to install redis and the redis rejson module using pip!
-It also provides one api function that can be used to start/stop redis.
+This is a shim package that, that allows you to install [redis](https://redis.io) and the redis
+[rejson](http://rejson.io) module using pip!  It also provides API functions to start/stop redis and to check if its
+running.
 
 Install with::
 
@@ -20,15 +21,27 @@ After installation, you can use the ``rediscontroller`` package like so:
 .. code:: python
 
     from rediscontroller import start_redis, stop_redis
+
     # Provide path to the data director here while staring redis. This uses the default config (see notes below)
     #^ and starts redis on PORT 65535
     start_redis(data_directory='/path/to/data/directory')
 
-    # Use this to provide your own redis configuration file and use the PORT you specified there for subsequent access.
+    # Specify the port where redis should be started (started on port 12345 here)
+    start_redis(data_directory='/path/to/data/directory', port=12345)
+
+    # Start redis on a random port, and return the port where its started
+    port = start_redis(data_directory='/path/to/data/directory', port='random')
+
+    # Use this to provide your own redis configuration file. The port number in the config file is ignored and redis is
+    #^ started on 65535. Pass in the port argument to specify a custom port.
     start_redis(data_directory='/path/to/data/directory', config_file_path='path/to/redis.conf')
 
     # Stop redis. Without arguments, it will work only if you run from the same host from which it was started.
     stop_redis()
+
+    # Stop redis. You need to pass in the port where it was started if its not on the default port
+    stop_redis(port=12345)
+    stop_redis(port=port)
 
     # Otherwise, pass in the redis host and port like so
     stop_redis(redis_host='localhost', redis_port=6379)
