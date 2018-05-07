@@ -74,3 +74,20 @@ def is_redis_running(redis_host='localhost', redis_port=REDIS_PORT):
         return True
     except redis.exceptions.ConnectionError:
         return False
+
+
+def get_running_redis_dir(redis_host='localhost', redis_port=REDIS_PORT):
+    """
+    Get the directory where the redis server at the given host and port is active
+
+    :param redis_host:
+    :param redis_port:
+    :return: directory
+    """
+    import redis
+    r = redis.StrictRedis(host=redis_host, port=redis_port)
+    try:
+        directory = r.config_get('dir')['dir']
+        return directory
+    except redis.exceptions.ConnectionError:
+        return None
