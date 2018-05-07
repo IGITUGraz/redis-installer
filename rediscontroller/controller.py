@@ -81,13 +81,15 @@ def start_redis(data_directory, config_file_path=None, redis_port=REDIS_PORT):
     assert os.path.exists(config_file_path), "File {} does not exist".format(config_file_path)
 
     if redis_port == 'random':
-        for i in range(100):  # makes a 100 tries to start a redis server at a random port
+        n_random_trials = 4
+        for i in range(n_random_trials):  # makes n_random_trials tries to start a redis server at a random port
             redis_port = random.randint(60000, 65535)
             result = _careful_start_redis(redis_server_path, data_directory, config_file_path, redis_port)
             if result:
                 break
         else:
-            raise RuntimeError("Tried 100 Random ports between 60000-65535, could not find a free port")
+            raise RuntimeError("Tried {} Random ports between 60000-65535, could not find a free port"
+                               .format(n_random_trials))
     else:
         assert isinstance(redis_port, Integral), "The redis port should be one of the string 'random' or an integer"
         result = _careful_start_redis(redis_server_path, data_directory, config_file_path, redis_port)
