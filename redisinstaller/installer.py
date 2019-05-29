@@ -62,7 +62,7 @@ def install_redis_json():
     if not os.path.exists(rejson_file_dest):
         rejson_unpacked_root = '/tmp'
         rejson_archive_path = os.path.join(rejson_unpacked_root, 'rejson-v1.0.1.tar.gz')
-        rejson_unpacked_path = os.path.join(rejson_unpacked_root, 'rejson-1.0.1')
+        rejson_unpacked_path = os.path.join(rejson_unpacked_root, 'RedisJSON-1.0.1')
 
         if not os.path.exists(rejson_archive_path):
             import pycurl
